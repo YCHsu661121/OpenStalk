@@ -2,45 +2,50 @@
 
 ## **項目介紹**
 `OpenStalk` 是一個基於 Docker 打包的股票掃描工具，其核心功能包括：
-- 接口 `/stock`：查詢股票數據，支持 `yfinance`。
-- 接口 `/ollama`：利用 Ollama 容器執行命令並返回結果。
-- 預設通過 Docker 與其他容器交互。
+- 通過 `/stock` API 獲取實時股票數據。
+- 通過 `/ollama` API 調用 Ollama 容器執行命令。
+- 適用於 OpenClaw 平台進行擴展。
 
 ---
 
-## **系統需求**
-- **Python**: 3.9 或更高版本
-- **Docker**: 已安裝並啟用
+## **如何給 OpenClaw 使用？**
+
+### **步驟 1：安裝 Docker 環境**
+確保 Docker 已安裝，並啟用了服務。
+
+### **步驟 2：克隆倉庫**
+將 `OpenStalk` 倉庫克隆至本地的 OpenClaw `skills/` 目錄下：
+```bash
+git clone https://github.com/YCHsu661121/OpenStalk.git skills/OpenStalk
+```
+
+### **步驟 3：構建與啟動 Docker 容器**
+在克隆的目錄下構建容器並啟動：
+```bash
+cd skills/OpenStalk
+sudo docker-compose build
+sudo docker-compose up -d
+```
+
+### **步驟 4：編輯 OpenClaw 配置**
+在 OpenClaw 主配置文件中啟用此技能：
+```yaml
+skills:
+  - path: skills/OpenStalk
+```
+
+### **步驟 5：重啟 OpenClaw**
+執行以下命令以重新加載技能：
+```bash
+openclaw restart
+```
 
 ---
 
-## **安裝步驟**
+## **技能功能介紹**
 
-### 1. **克隆倉庫**
-```bash
-git clone https://github.com/YCHsu661121/OpenStalk.git
-cd OpenStalk
-```
-
-### 2. **構建 Docker 映像**
-```bash
-docker-compose build
-```
-
-### 3. **啟動服務**
-```bash
-docker-compose up
-```
-
-這將啟動應用，並將服務暴露在 `http://localhost:5000`。
-
----
-
-## **使用說明**
-
-### 1. 獲取股票數據
-- 請求類型：`GET`
-- 地址：`http://localhost:5000/stock`
+### **1. 呼叫股票 API**
+方法 `GET /stock`：
 - 範例請求：
   ```bash
   curl "http://localhost:5000/stock?ticker=AAPL"
@@ -55,9 +60,8 @@ docker-compose up
   }
   ```
 
-### 2. 調用 Ollama 容器
-- 請求類型：`POST`
-- 地址：`http://localhost:5000/ollama`
+### **2. 調用 Ollama API**
+方法 `POST /ollama`：
 - 範例請求：
   ```bash
   curl -X POST -H "Content-Type: application/json" \
